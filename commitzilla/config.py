@@ -2,13 +2,14 @@ import os
 from configparser import ConfigParser
 from pathlib import Path
 from dataclasses import dataclass, asdict
+from typing import Optional
 
 
 @dataclass
 class ConfigSchema:
-    model: str | None = None
-    character_name: str | None = None
-    character_prompt: str | None = None
+    model: Optional[str] = None
+    character_name: Optional[str] = None
+    character_prompt: Optional[str] = None
 
     def as_dict(self):
         return {k: v for k, v in asdict(self).items() if v is not None}

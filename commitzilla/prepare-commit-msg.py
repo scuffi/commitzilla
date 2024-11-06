@@ -7,6 +7,7 @@ import json
 from dataclasses import dataclass
 from configparser import ConfigParser
 from pathlib import Path
+from typing import Optional
 
 # TODO: Add a chmod function to make this script executable, like:
 """
@@ -26,10 +27,10 @@ os.chmod(file_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |  # Owner: read,
 
 @dataclass
 class Config:
-    model: str | None
-    character_name: str | None
-    character_prompt: str | None
-    openai_api_key: str | None
+    model: Optional[str]
+    character_name: Optional[str]
+    character_prompt: Optional[str]
+    openai_api_key: Optional[str]
 
 
 def _load_config(working_dir: Path = Path.cwd(), config_name: str = "cz-config.ini"):
