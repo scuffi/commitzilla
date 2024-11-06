@@ -1,9 +1,9 @@
-name: Publish Commitzilla Package
+name: Test Publish Commitzilla Package
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main
 
 jobs:
   lint:
@@ -28,9 +28,10 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files
 
-  publish:
+  test-publish:
     needs: lint
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[test-release]')
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -48,5 +49,5 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-root
 
-      - name: Publish to PyPI
-        run: poetry publish --build
+      - name: Publish to PyPI Test
+        run: poetry publish --build --repository testpypi
