@@ -3,7 +3,7 @@ name: Test Publish Commitzilla Package
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   lint:
