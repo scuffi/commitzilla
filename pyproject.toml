@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "commitzilla"
+version = "0.1.0"
+description = ""
+authors = ["Scuffi <grawlixpvp@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+typer = "^0.12.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
