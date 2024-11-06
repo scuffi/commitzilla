@@ -1,5 +1,5 @@
 import os
-import configparser
+from configparser import ConfigParser
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
@@ -7,7 +7,8 @@ from dataclasses import dataclass, asdict
 @dataclass
 class ConfigSchema:
     model: str | None = None
-    prompt: str | None = None
+    character_name: str | None = None
+    character_prompt: str | None = None
 
     def as_dict(self):
         return {k: v for k, v in asdict(self).items() if v is not None}
@@ -42,7 +43,7 @@ class CzConfig:
                 f"No .git directory found in the specified working directory: {working_dir}"
             )
 
-        config = configparser.ConfigParser()
+        config = ConfigParser()
         config.read(self._config_path)
 
         if "settings" not in config.sections():
@@ -58,6 +59,7 @@ class CzConfig:
           config_data (ConfigSchema): ConfigSchema object that contains configuration data to be written to
         a file.
         """
+        print(config_data)
         for section, option in config_data.as_dict().items():
             self.config.set("settings", section, option)
 
