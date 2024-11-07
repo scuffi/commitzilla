@@ -64,15 +64,24 @@ def install():
 @app.command(
     help="Enable or disable the character name being added to the commit message, with this enabled, a commit will look like: '[character] message'"
 )
-def prefix(enabled: bool = True):
-    config_schema = ConfigSchema(
-        prefix="yes" if enabled else "no",
-    )
+def prefix():
     config = CzConfig()
+    choices = ["Enable", "Disable"]
+    selection = questionary.select(
+        "Do you want to enable or disable the character name prefix?",
+        choices=choices,
+        style=question_style,
+    ).ask()
+
+    enable = selection == choices[0]
+
+    config_schema = ConfigSchema(
+        prefix="yes" if enable else "no",
+    )
     config.write(config_schema)
 
     print(
-        f":white_check_mark: [green]{'Enabled' if enabled else 'Disabled'} [bold]commitzilla[/bold] prefix. Your commits will now include the character name.[/green]"
+        f":white_check_mark: [green]{'Enabled' if enable else 'Disabled'} [bold]commitzilla[/bold] prefix. Your commits will now include the character name.[/green]"
     )
 
 

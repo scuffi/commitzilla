@@ -61,8 +61,11 @@ class CzConfig:
           config_data (ConfigSchema): ConfigSchema object that contains configuration data to be written to
         a file.
         """
-        for section, option in config_data.as_dict().items():
-            self.config.set("settings", section, option)
+        for key, value in config_data.as_dict().items():
+            self.config.set("settings", key, value)
 
         with open(self._config_path, "w") as configfile:
             self.config.write(configfile)
+
+    def get(self, value: str) -> Optional[str]:
+        return self.config.get("settings", value, fallback=None)
