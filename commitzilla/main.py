@@ -50,6 +50,7 @@ def install():
         model=DEFAULT_MODEL,
         character_name=character_name,
         character_prompt=character_prompt,
+        prefix="no",
     )
     config = CzConfig()
     config.write(config_schema)
@@ -58,6 +59,21 @@ def install():
 
     print(
         ":white_check_mark: [green]Successfully installed [bold]commitzilla[/bold][/green]!"
+    )
+
+
+@app.command(
+    help="Enable or disable the character name being added to the commit message, with this enabled, a commit will look like: '[character] message'"
+)
+def prefix(enabled: bool = True):
+    config_schema = ConfigSchema(
+        prefix="yes" if enabled else "no",
+    )
+    config = CzConfig()
+    config.write(config_schema)
+
+    print(
+        f":white_check_mark: [green]{'Enabled' if enabled else 'Disabled'} [bold]commitzilla[/bold] prefix. Your commits will now include the character name.[/green]"
     )
 
 
@@ -208,8 +224,8 @@ def _input_character():
             style=question_style,
         ).ask()
 
-        templated_prompt = PROMPT_TEMPLATE.format(character=character_prompt)
+        character_prompt = PROMPT_TEMPLATE.format(character=character_prompt)
 
-        characters[character_name] = templated_prompt
+        characters[character_name] = character_prompt
 
-    return (character_name, templated_prompt)
+    return (character_name, character_prompt)

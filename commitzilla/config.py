@@ -8,6 +8,7 @@ from typing import Optional
 @dataclass
 class ConfigSchema:
     model: Optional[str] = None
+    prefix: Optional[str] = None
     character_name: Optional[str] = None
     character_prompt: Optional[str] = None
 

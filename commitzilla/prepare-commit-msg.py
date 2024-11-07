@@ -22,6 +22,7 @@ class Config:
     model: Optional[str]
     character_name: Optional[str]
     character_prompt: Optional[str]
+    prefix: Optional[bool]
     openai_api_key: Optional[str]
 
 
@@ -39,6 +40,9 @@ def _load_config(working_dir: Path = Path.cwd(), config_name: str = "cz-config.i
         model=config.get("settings", "model", fallback=None),
         character_name=config.get("settings", "character_name", fallback=None),
         character_prompt=config.get("settings", "character_prompt", fallback=None),
+        prefix=(
+            True if config.get("settings", "prefix", fallback=None) == "yes" else False
+        ),
         openai_api_key=keyring.get_password("commitzilla", "api_key"),
     )
 
@@ -90,6 +94,8 @@ def main():
     new_commit_msg = generate_commit_message(commit_msg, config)
 
     if new_commit_msg:
+        if config.prefix:
+            new_commit_msg = f"[{config.character_name}] {new_commit_msg}"
         with open(commit_msg_filepath, "w") as f:
             f.write(new_commit_msg)
     else:
