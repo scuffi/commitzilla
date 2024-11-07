@@ -28,15 +28,15 @@ def install():
     print(
         ":rocket: [yellow]Installing [bold]commitzilla[/bold] hook...[/yellow] :cowboy_hat_face:"
     )
-    api_key = questionary.password("Enter your OpenAI API key").ask()
 
+    api_key = questionary.password("Enter your OpenAI API key").ask()
     _update_values(api_key=api_key)
 
     CharacterDict()
     character_name, character_prompt = _input_character()
 
     config_schema = ConfigSchema(
-        model="gpt-4o-mini",
+        model=DEFAULT_MODEL,
         character_name=character_name,
         character_prompt=character_prompt,
     )
