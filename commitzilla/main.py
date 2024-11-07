@@ -1,16 +1,17 @@
 import os
-from pathlib import Path
 import shutil
 import stat
+from pathlib import Path
 from typing import Optional
-from typing_extensions import Annotated
+
+import keyring
+import questionary
 import typer
 from rich import print
-import questionary
-import keyring
+from typing_extensions import Annotated
 
-from commitzilla.config import CzConfig, ConfigSchema
 from commitzilla.characters import CharacterDict
+from commitzilla.config import ConfigSchema, CzConfig
 
 app = typer.Typer()
 
@@ -161,7 +162,6 @@ def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):
     config.write(config_schema)
 
     if api_key:
-        keyring.delete_password("commitzilla", "api_key")
         keyring.set_password("commitzilla", "api_key", api_key)
 
 
