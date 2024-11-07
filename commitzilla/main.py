@@ -16,6 +16,14 @@ app = typer.Typer()
 
 DEFAULT_MODEL = "gpt-4o-mini"
 
+question_style = questionary.Style(
+    [
+        ("answer", "fg:#008000 bold"),
+        ("highlighted", "fg:#0000ff bold"),
+        ("pointer", "fg:#0000ff bold"),
+    ]
+)
+
 
 @app.command()
 def install():
@@ -29,7 +37,9 @@ def install():
         ":rocket: [yellow]Installing [bold]commitzilla[/bold] hook...[/yellow] :cowboy_hat_face:"
     )
 
-    api_key = questionary.password("Enter your OpenAI API key").ask()
+    api_key = questionary.password(
+        "Enter your OpenAI API key", style=question_style
+    ).ask()
     _update_values(api_key=api_key)
 
     CharacterDict()
@@ -54,7 +64,8 @@ def install():
 def uninstall():
     if _is_hook_installed():
         confirmation = questionary.confirm(
-            "Are you sure you want to remove the commitzilla hook?"
+            "Are you sure you want to remove the commitzilla hook?",
+            style=question_style,
         ).ask()
 
         if confirmation:
@@ -78,8 +89,8 @@ def uninstall():
 
 @app.command()
 def configure(
-    model: Annotated[str | None, typer.Option(help="OpenAI model to use")] = None,
-    api_key: Annotated[str | None, typer.Option(help="OpenAI API key")] = None,
+    model: Annotated[Optional[str], typer.Option(help="OpenAI model to use")] = None,
+    api_key: Annotated[Optional[str], typer.Option(help="OpenAI API key")] = None,
 ):
     _update_values(model, api_key)
 
@@ -99,7 +110,9 @@ def configure(
 def character():
     character_name, character_prompt = _input_character()
 
-    use_now = questionary.confirm("Do you want to use this character now?").ask()
+    use_now = questionary.confirm(
+        "Do you want to use this character now?", style=question_style
+    ).ask()
 
     if use_now:
         config = CzConfig()
@@ -169,6 +182,7 @@ def _input_character():
     selection = questionary.select(
         "Do you want to use a preconfigured character, or prompt your own?",
         choices=choices,
+        style=question_style,
     ).ask()
 
     characters = CharacterDict()
@@ -178,16 +192,18 @@ def _input_character():
         character_name = questionary.select(
             "Which character do you want to use?",
             choices=sorted(characters.keys()),
+            style=question_style,
         ).ask()
 
         character_prompt = characters[character_name]
 
     else:
         character_name = questionary.text(
-            "What's the name of this character (does not affect the prompt):"
+            "What's the name of this character (does not affect the prompt):",
+            style=question_style,
         ).ask()
         character_prompt = questionary.text(
-            f"What's the custom prompt for '{character_name}':"
+            f"What's the custom prompt for '{character_name}':", style=question_style
         ).ask()
 
         characters[character_name] = character_prompt
