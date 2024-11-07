@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "commitzilla"
-version = "0.1.1"
+version = "0.1.2"
 description = "Make your commit messages helpful, for once"
 authors = ["Scuffi <grawlixpvp@gmail.com>"]
 readme = "README.md"
@@ -9,8 +9,8 @@ readme = "README.md"
 python = "^3.9"
 typer = "^0.12.5"
 questionary = "^2.0.1"
-
 keyring = "^25.5.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
