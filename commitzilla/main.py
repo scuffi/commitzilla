@@ -19,7 +19,15 @@ DEFAULT_MODEL = "gpt-4o-mini"
 
 @app.command()
 def install():
-    # TODO: First check if we already have everything installed
+    if _is_hook_installed():
+        print(
+            "[yellow]commitzilla is already installed in this repository, use [bold]commitzilla uninstall[/bold] to uninstall it[/yellow]"
+        )
+        return
+
+    print(
+        ":rocket: [yellow]Installing [bold]commitzilla[/bold] hook...[/yellow] :cowboy_hat_face:"
+    )
     api_key = questionary.password("Enter your OpenAI API key").ask()
 
     _update_values(api_key=api_key)
@@ -41,17 +49,31 @@ def install():
         ":white_check_mark: [green]Successfully installed [bold]commitzilla[/bold][/green]!"
     )
 
-    """
-    Create a default configuration file (default model should be gpt-4o-mini).
-    Move characters file into .git/hooks.
-    
-    Move prepare-commit-msg hook into .git/hooks.
-    """
-
 
 @app.command()
 def uninstall():
-    typer.echo("Bye World!")
+    if _is_hook_installed():
+        confirmation = questionary.confirm(
+            "Are you sure you want to remove the commitzilla hook?"
+        ).ask()
+
+        if confirmation:
+            print(
+                ":warning: [yellow]Removing [bold]commitzilla[/bold] hook...[/yellow] :sleepy:"
+            )
+            _remove_hook()
+            print(
+                ":white_check_mark: [green]Successfully removed [bold]commitzilla[/bold] hook... have a nice life without me...[/green]"
+            )
+        else:
+            print(
+                ":grey_question: YAY! [bold]commitzilla[/bold] hook was saved :smirk:"
+            )
+        return
+
+    print(
+        "[yellow]commitzilla is not installed in this repository, use [bold]commitzilla install[/bold] to install it[/yellow]"
+    )
 
 
 @app.command()
@@ -101,6 +123,26 @@ def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):
 
     if api_key:
         keyring.set_password("commitzilla", "api_key", api_key)
+
+
+def _is_hook_installed():
+    hook_dir = Path.cwd() / ".git" / "hooks"
+    hook_path = hook_dir / "prepare-commit-msg"
+    config_path = hook_dir / "cz-config.ini"
+    characters_path = hook_dir / "cz_characters.json"
+
+    return any(p.exists() for p in [hook_path, config_path, characters_path])
+
+
+def _remove_hook():
+    hook_dir = Path.cwd() / ".git" / "hooks"
+    hook_path = hook_dir / "prepare-commit-msg"
+    config_path = hook_dir / "cz-config.ini"
+    characters_path = hook_dir / "cz_characters.json"
+
+    hook_path.unlink(missing_ok=True)
+    config_path.unlink(missing_ok=True)
+    characters_path.unlink(missing_ok=True)
 
 
 def _move_hook_file():
