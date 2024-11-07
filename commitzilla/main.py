@@ -15,7 +15,6 @@ from commitzilla.characters import CharacterDict
 app = typer.Typer()
 
 DEFAULT_MODEL = "gpt-4o-mini"
-PROMPT_TEMPLATE = "Your task is to rewrite a git commit message into a character themed commit message. The character is {character}. A user will submit a git commit message, and you should translate it like the character wrote it. You should only respond with the translated commit message, nothing else."
 
 question_style = questionary.Style(
     [
@@ -223,8 +222,6 @@ def _input_character():
             f"What's the custom prompt for '{character_name}' (treat this as a description of the character):",
             style=question_style,
         ).ask()
-
-        character_prompt = PROMPT_TEMPLATE.format(character=character_prompt)
 
         characters[character_name] = character_prompt
 
