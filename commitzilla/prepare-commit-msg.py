@@ -130,7 +130,8 @@ def main():
 
         if RICH_AVAILABLE:
             print(
-                f"[green]:tada: commitzilla has updated your boring commit message! :tada:\n>'[/green][grey]{commit_msg}[/grey][green]'[/green]"
+                f"""[green]:tada: commitzilla has updated your boring commit message! :tada:
+-> '[/green]{commit_msg}[green]'[/green]"""
             )
         else:
             print(new_commit_msg)
