@@ -68,7 +68,7 @@ def prefix():
     config = CzConfig()
     choices = ["Enable", "Disable"]
     selection = questionary.select(
-        "Do you want to enable or disable the character name prefix?",
+        "Do you want to enable or disable the character name prefix? This will add the character name to the commit message.",
         choices=choices,
         style=question_style,
     ).ask()
@@ -81,7 +81,7 @@ def prefix():
     config.write(config_schema)
 
     print(
-        f":white_check_mark: [green]{'Enabled' if enable else 'Disabled'} [bold]commitzilla[/bold] prefix. Your commits will now include the character name.[/green]"
+        f":white_check_mark: [green]{'Enabled' if enable else 'Disabled'} character prefix. {'Your commits will now include the character name.' if enable else 'Your commits will no longer include the character name.'}[/green]"
     )
 
 

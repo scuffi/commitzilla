@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from configparser import ConfigParser
 from pathlib import Path
 from typing import Optional
+import logging
 
 try:
     import keyring
@@ -15,6 +16,16 @@ except ImportError:
     raise ModuleNotFoundError(
         "commitzilla could not find `keyring`. Please install keyring using: `pip install keyring` and add your OpenAI key using `commitzilla configure`"
     )
+
+try:
+    from rich import print
+
+    RICH_AVAILABLE = True
+except ImportError:
+    logging.info(
+        "commitzilla could not find `rich`. Please install `rich` using: `pip install rich` for prettier outputs"
+    )
+    RICH_AVAILABLE = False
 
 PROMPT_TEMPLATE = """
 You are a humorous assistant tasked with translating git commit messages into the distinctive voice of a famous character. Your sole purpose is to transform the content of each commit message into the style and language of <character>, creating a witty and entertaining version of the commit message.
@@ -93,7 +104,9 @@ def generate_commit_message(commit_msg: str, config: Config):
         message = completion["choices"][0]["message"]["content"].strip()
         return message
     else:
-        print(f"Error generating commit message: {response.status} - {response.reason}")
+        logging.error(
+            f"Error generating commit message: {response.status} - {response.reason}"
+        )
         return None
 
 
@@ -106,7 +119,7 @@ def main():
     config = _load_config()
 
     if not config:
-        print("Failed to load configuration. Using the original message.")
+        logging.warning("Failed to load configuration. Using the original message.")
         return
 
     new_commit_msg = generate_commit_message(commit_msg, config)
@@ -114,10 +127,20 @@ def main():
     if new_commit_msg:
         if config.prefix:
             new_commit_msg = f"[{config.character_name}] {new_commit_msg}"
+
+        if RICH_AVAILABLE:
+            print(
+                f"[green]:tada: commitzilla has updated your boring commit message! :tada:\n>'[/green][grey]{commit_msg}[/grey][green]'[/green]"
+            )
+        else:
+            print(new_commit_msg)
+
         with open(commit_msg_filepath, "w") as f:
             f.write(new_commit_msg)
     else:
-        print("Failed to generate a commit message. Using the original message.")
+        logging.warning(
+            "Failed to generate a commit message. Using the original message."
+        )
 
 
 if __name__ == "__main__":
