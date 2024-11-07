@@ -37,10 +37,11 @@ def install():
         ":rocket: [yellow]Installing [bold]commitzilla[/bold] hook...[/yellow] :cowboy_hat_face:"
     )
 
-    api_key = questionary.password(
-        "Enter your OpenAI API key", style=question_style
-    ).ask()
-    _update_values(api_key=api_key)
+    if not keyring.get_password("commitzilla", "api_key"):
+        api_key = questionary.password(
+            "Enter your OpenAI API key", style=question_style
+        ).ask()
+        _update_values(api_key=api_key)
 
     CharacterDict()
     character_name, character_prompt = _input_character()
@@ -160,6 +161,7 @@ def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):
     config.write(config_schema)
 
     if api_key:
+        keyring.delete_password("commitzilla", "api_key")
         keyring.set_password("commitzilla", "api_key", api_key)
 
 
