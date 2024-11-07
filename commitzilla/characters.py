@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 from pathlib import Path
 
 
@@ -20,7 +21,18 @@ class CharacterDict(dict):
                 data = json.load(f)
                 super().update(data)
         else:
-            self.file_path.write_text("{}")
+            default_characters_file = Path(__file__).parent.resolve() / file_name
+            self._move_default_characters_file(default_characters_file, self.file_path)
+
+    def _move_default_characters_file(
+        self, default_characters_file: Path, characters_file: Path
+    ):
+        print(f"Checking for default characters: {default_characters_file}")
+
+        if os.path.exists(default_characters_file) and not os.path.exists(
+            characters_file
+        ):
+            shutil.copy(default_characters_file, characters_file)
 
     def __setitem__(self, key, value):
         super().__setitem__(key, value)

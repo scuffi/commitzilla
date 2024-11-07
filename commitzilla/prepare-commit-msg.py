@@ -9,20 +9,12 @@ from configparser import ConfigParser
 from pathlib import Path
 from typing import Optional
 
-# TODO: Add a chmod function to make this script executable, like:
-"""
-import os
-import stat
-
-# Path to the file (for example, the prepare-commit-msg hook)
-file_path = '.git/hooks/prepare-commit-msg'
-
-# Set the file as executable for the user, group, and others
-os.chmod(file_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |  # Owner: read, write, execute
-                    stat.S_IRGRP | stat.S_IXGRP |                 # Group: read, execute
-                    stat.S_IROTH | stat.S_IXOTH)                  # Others: read, execute
-
-"""
+try:
+    import keyring
+except ImportError:
+    raise ModuleNotFoundError(
+        "commitzilla could not find `keyring`. Please install keyring using: `pip install keyring` and add your OpenAI key using `commitzilla configure`"
+    )
 
 
 @dataclass
@@ -34,7 +26,7 @@ class Config:
 
 
 def _load_config(working_dir: Path = Path.cwd(), config_name: str = "cz-config.ini"):
-    config_path = working_dir / config_name
+    config_path = working_dir / ".git" / "hooks" / config_name
     if not os.path.exists(config_path):
         return None
 
@@ -47,7 +39,7 @@ def _load_config(working_dir: Path = Path.cwd(), config_name: str = "cz-config.i
         model=config.get("settings", "model", fallback=None),
         character_name=config.get("settings", "character_name", fallback=None),
         character_prompt=config.get("settings", "character_prompt", fallback=None),
-        openai_api_key=os.environ.get("CZ_OPENAI_API_KEY", None),
+        openai_api_key=keyring.get_password("commitzilla", "api_key"),
     )
 
 
@@ -79,7 +71,7 @@ def generate_commit_message(commit_msg: str, config: Config):
         message = completion["choices"][0]["message"]["content"].strip()
         return message
     else:
-        print(f"Error: {response.status} - {response.reason}")
+        print(f"Error generating commit message: {response.status} - {response.reason}")
         return None
 
 
