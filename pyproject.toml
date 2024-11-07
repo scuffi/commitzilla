@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "commitzilla"
-version = "0.1.4"
+version = "0.1.5"
 description = "Make your commit messages helpful, for once"
 authors = ["Scuffi <grawlixpvp@gmail.com>"]
 readme = "README.md"
