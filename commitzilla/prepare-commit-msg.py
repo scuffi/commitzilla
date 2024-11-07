@@ -131,10 +131,12 @@ def main():
         if RICH_AVAILABLE:
             print(
                 f"""[green]:tada: commitzilla has updated your boring commit message! :tada:
--> '[/green]{commit_msg}[green]'[/green]"""
+-> '[/green]{new_commit_msg}[green]'[/green]"""
             )
         else:
-            print(new_commit_msg)
+            print(
+                f"commitzilla has updated your boring commit message! - '{new_commit_msg}'"
+            )
 
         with open(commit_msg_filepath, "w") as f:
             f.write(new_commit_msg)
