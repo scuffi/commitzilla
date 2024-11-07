@@ -4,6 +4,10 @@
 
 Welcome to **commitzilla**! This is a simple git hook that will hijack your commit messages, and translate them into detailed, comprehensive messages, fit for anyone and everyone!
 
+<p align="center">
+  <img src="./example.gif" alt="Example GIF" />
+</p>
+
 ## Installation
 
 Installation is soooooo easy, just pip install the package:
