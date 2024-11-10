@@ -11,6 +11,7 @@ class ConfigSchema:
     prefix: Optional[str] = None
     character_name: Optional[str] = None
     character_prompt: Optional[str] = None
+    enabled: Optional[str] = None
 
     def as_dict(self):
         return {k: v for k, v in asdict(self).items() if v is not None}

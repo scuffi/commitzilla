@@ -53,6 +53,7 @@ def install():
         character_name=character_name,
         character_prompt=character_prompt,
         prefix="no",
+        enabled="yes",
     )
     config = CzConfig()
     config.write(config_schema)
@@ -173,6 +174,24 @@ def check():
         print(":white_check_mark: [green][bold]commitzilla[/bold] is installed[/green]")
     else:
         print(":x: [red][bold]commitzilla[/bold] is not installed[/red]")
+
+
+@app.command()
+def enable():
+    _toggle_enabled(True)
+
+
+@app.command()
+def disable():
+    _toggle_enabled(False)
+
+
+def _toggle_enabled(enable: bool):
+    config = CzConfig()
+    config.write(ConfigSchema(enabled="yes" if enable else "no"))
+    print(
+        f":white_check_mark: [green][bold]commitzilla[/bold] has been {'enabled' if enable else 'disabled'}[/green]"
+    )
 
 
 def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):

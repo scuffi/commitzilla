@@ -51,6 +51,7 @@ class Config:
     character_prompt: Optional[str]
     prefix: Optional[bool]
     openai_api_key: Optional[str]
+    enabled: Optional[bool]
 
 
 def _load_config(working_dir: Path = Path.cwd(), config_name: str = "cz-config.ini"):
@@ -71,6 +72,9 @@ def _load_config(working_dir: Path = Path.cwd(), config_name: str = "cz-config.i
             True if config.get("settings", "prefix", fallback=None) == "yes" else False
         ),
         openai_api_key=keyring.get_password("commitzilla", "api_key"),
+        enabled=(
+            True if config.get("settings", "enabled", fallback=None) == "yes" else False
+        ),
     )
 
 
