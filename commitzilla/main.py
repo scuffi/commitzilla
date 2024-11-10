@@ -8,6 +8,7 @@ import keyring
 import questionary
 import typer
 from rich import print
+from rich.table import Table
 from typing_extensions import Annotated
 
 from commitzilla.characters import CharacterDict
@@ -134,26 +135,36 @@ def configure(
 
 
 @app.command()
-def character():
-    character_name, character_prompt = _input_character()
-
-    use_now = questionary.confirm(
-        "Do you want to use this character now?", style=question_style
-    ).ask()
-
-    if use_now:
-        config = CzConfig()
-        config.write(
-            ConfigSchema(
-                character_name=character_name, character_prompt=character_prompt
-            )
-        )
-        print(
-            f":white_check_mark: [green]Now using '{character_name}' character[/green]"
-        )
+def character(
+    character: Annotated[Optional[str], typer.Argument()] = None,
+    list: Annotated[bool, typer.Option()] = False,
+):
+    if list:
+        characters = CharacterDict()
+        table = Table(title="Available characters")
+        table.add_column("Character")
+        [table.add_row(c) for c in characters.keys()]
+        print(table)
         return
 
-    print(f":white_check_mark: [green]Saved '{character_name}' character[/green]")
+    if character:
+        characters = CharacterDict()
+        if character not in characters:
+            print(
+                "[red]Character not found, use [bold]commitzilla character --list[/bold] to see available characters[/red]"
+            )
+            return
+
+        character_prompt = characters[character]
+        character_name = character
+    else:
+        character_name, character_prompt = _input_character()
+
+    config = CzConfig()
+    config.write(
+        ConfigSchema(character_name=character_name, character_prompt=character_prompt)
+    )
+    print(f":white_check_mark: [green]Now using '{character_name}' character[/green]")
 
 
 def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):

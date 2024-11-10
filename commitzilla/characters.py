@@ -16,19 +16,17 @@ class CharacterDict(dict):
 
         self.file_path = hooks_dir / file_name
 
-        if self.file_path.exists():
-            with self.file_path.open("r") as f:
-                data = json.load(f)
-                super().update(data)
-        else:
+        if not self.file_path.exists():
             default_characters_file = Path(__file__).parent.resolve() / file_name
             self._move_default_characters_file(default_characters_file, self.file_path)
+
+        with self.file_path.open("r") as f:
+            data = json.load(f)
+            super().update(data)
 
     def _move_default_characters_file(
         self, default_characters_file: Path, characters_file: Path
     ):
-        print(f"Checking for default characters: {default_characters_file}")
-
         if os.path.exists(default_characters_file) and not os.path.exists(
             characters_file
         ):
