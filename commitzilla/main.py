@@ -167,6 +167,14 @@ def character(
     print(f":white_check_mark: [green]Now using '{character_name}' character[/green]")
 
 
+@app.command()
+def check():
+    if _is_hook_installed():
+        print(":white_check_mark: [green][bold]commitzilla[/bold] is installed[/green]")
+    else:
+        print(":x: [red][bold]commitzilla[/bold] is not installed[/red]")
+
+
 def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):
     config_schema = ConfigSchema(model=model)
     config = CzConfig()

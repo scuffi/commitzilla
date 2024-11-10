@@ -16,21 +16,13 @@ Installation is soooooo easy, just pip install the package:
 pip install commitzilla
 ```
 
-then navigate to wherever you want to install the hook, and run:
+then navigate to the directory of your local git repo where you want to install the hook, and run:
 
 ```
 commitzilla install
 ```
 
 and bob's your uncle.
-
-## Uninstallation
-
-Not sure why you're reading this... but anyways, removing commitzilla is even easier than installing it
-
-```
-commitzilla uninstall
-```
 
 ## Configuration
 
@@ -50,4 +42,13 @@ You can also enable a prefix, so your messages will look like this: `[Character]
 
 ```
 commitzilla prefix
+```
+
+## Uninstallation
+
+Not sure why you're reading this... but anyways, removing commitzilla is even easier than installing it,
+just navigate to the directory you want to remove the hook, and run:
+
+```
+commitzilla uninstall
 ```
