@@ -126,6 +126,10 @@ def main():
         logging.warning("Failed to load configuration. Using the original message.")
         return
 
+    if config.enabled is False:
+        logging.info("commitzilla is disabled. Using the original message.")
+        return
+
     new_commit_msg = generate_commit_message(commit_msg, config)
 
     if new_commit_msg:
