@@ -209,7 +209,7 @@ def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):
 
 
 def _is_hook_installed():
-    return any(p.exists() for p in [HOOK_PATH, CONFIG_PATH, CHARACTERS_PATH])
+    return HOOK_PATH.exists()
 
 
 def _remove_hook():
