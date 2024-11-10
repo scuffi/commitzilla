@@ -18,6 +18,11 @@ app = typer.Typer()
 
 DEFAULT_MODEL = "gpt-4o-mini"
 
+HOOK_DIR_PATH = Path.cwd() / ".git" / "hooks"
+HOOK_PATH = HOOK_DIR_PATH / "prepare-commit-msg"
+CONFIG_PATH = HOOK_DIR_PATH / "cz-config.ini"
+CHARACTERS_PATH = HOOK_DIR_PATH / "cz_characters.json"
+
 question_style = questionary.Style(
     [
         ("answer", "fg:#008000 bold"),
@@ -204,34 +209,23 @@ def _update_values(model: Optional[str] = None, api_key: Optional[str] = None):
 
 
 def _is_hook_installed():
-    hook_dir = Path.cwd() / ".git" / "hooks"
-    hook_path = hook_dir / "prepare-commit-msg"
-    config_path = hook_dir / "cz-config.ini"
-    characters_path = hook_dir / "cz_characters.json"
-
-    return any(p.exists() for p in [hook_path, config_path, characters_path])
+    return any(p.exists() for p in [HOOK_PATH, CONFIG_PATH, CHARACTERS_PATH])
 
 
 def _remove_hook():
-    hook_dir = Path.cwd() / ".git" / "hooks"
-    hook_path = hook_dir / "prepare-commit-msg"
-    config_path = hook_dir / "cz-config.ini"
-    characters_path = hook_dir / "cz_characters.json"
-
-    hook_path.unlink(missing_ok=True)
-    config_path.unlink(missing_ok=True)
-    characters_path.unlink(missing_ok=True)
+    HOOK_PATH.unlink(missing_ok=True)
+    CONFIG_PATH.unlink(missing_ok=True)
+    CHARACTERS_PATH.unlink(missing_ok=True)
 
 
 def _move_hook_file():
     local_path = Path(__file__).parent.resolve() / "prepare-commit-msg.py"
-    hook_path = Path.cwd() / ".git" / "hooks" / "prepare-commit-msg"
 
-    shutil.copy(local_path, hook_path)
+    shutil.copy(local_path, HOOK_PATH)
 
     # We need to edit the permissions of the file, so git can execute it
     os.chmod(
-        hook_path,
+        HOOK_PATH,
         stat.S_IRUSR
         | stat.S_IWUSR
         | stat.S_IXUSR
